@@ -46,11 +46,18 @@ export interface Position {
 export interface Collection {
   id: number;
   title: string;
+  description: string;
+  featured: boolean;
+  total_photos: number;
+  tags: Tag[];
+  preview_photos: Image[];
   published_at: string;
   updated_at: string;
   curated: boolean;
-  cover_photo?: string;
-  user: User | null;
+  cover_photo?: Image;
+  private: boolean;
+  share_key: string;
+  user: User;
 }
 
 export interface User {
@@ -80,7 +87,7 @@ export interface Urls {
   full: string;
   regular: string;
   small: string;
-  thumg: string;
+  thumb: string;
 }
 
 // Links interfaces
