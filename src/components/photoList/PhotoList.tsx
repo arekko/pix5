@@ -12,14 +12,19 @@ const width = Dimensions.get("screen").width;
 interface Props {
   data: Photo[];
   onPress: (id: string) => void;
-  clearPhoto: any;
+  headerComponent?: any;
 }
 
-export const PhotoList: React.FC<Props> = ({ data, onPress }) => (
+export const PhotoList: React.FC<Props> = ({
+  data,
+  onPress,
+  headerComponent
+}) => (
   <View style={{ flex: 1, alignItems: "center" }}>
     {
       <FlatList
         data={data}
+        ListHeaderComponent={headerComponent ? headerComponent : null}
         keyExtractor={(item, i) => `${item.id}${i}`}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }: any) => (
