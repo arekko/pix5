@@ -73,7 +73,12 @@ export const C: React.FC<Props> = ({
               {item.title}
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 15, color: "#999" }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "#999"
+                }}
+              >
                 {item.total_photos} photos
               </Text>
               <Text
