@@ -12,14 +12,19 @@ export interface Image {
   description: string;
   exif?: Exif;
   location?: Location;
-  tags?: Tag[];
+  tags?: ITag[];
   current_user_collections: Collection[];
   urls: Urls;
   links: ImageLinks;
   user: User;
+  related_collections: {
+    results: Collection[];
+    total: number;
+    type: string;
+  };
 }
 
-export interface Tag {
+export interface ITag {
   title: string;
 }
 
@@ -49,7 +54,7 @@ export interface Collection {
   description: string;
   featured: boolean;
   total_photos: number;
-  tags: Tag[];
+  ITags: ITag[];
   preview_photos: Image[];
   published_at: string;
   updated_at: string;
@@ -70,7 +75,7 @@ export interface User {
   total_likes: number;
   total_photos: number;
   total_collections: number;
-  instagram_username: string;
+  insITagram_username: string;
   twitter_username: string;
   profile_image: ProfileImage;
   links: UserLinks;

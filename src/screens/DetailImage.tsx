@@ -1,50 +1,21 @@
 import * as React from "react";
 import { Dimensions, ScrollView, Text, View } from "react-native";
 import Image from "react-native-scalable-image";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigationParam } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
+import { CollectionSlider } from "../components/collection-slider/CollectionSlider";
+import ImageInfo from "../components/image-info";
+import ImageStats from "../components/image-stats";
 import Spinner from "../components/spinner";
+import Tags from "../components/tags";
 import withUnsplashService from "../hocs";
 import { clearPhoto, fetchPhoto } from "../redux-store/actions/photoActions";
 import { Image as Photo } from "../types";
 
 const screenWidth = Dimensions.get("screen").width;
 
-const ImageStats = ({
-  likes,
-  downloads,
-  date
-}: {
-  likes: number;
-  downloads: number;
-  date: string;
-}) => (
-  <View
-    style={{
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-around",
-      padding: 15
-    }}
-  >
-    <View style={{ flexDirection: 'row'}}>
-      <Icon name="calendar-range" size={18} />
-      <Text>{date}</Text>
-    </View>
-
-    <View style={{ flexDirection: 'row'}}>
-      <Icon name="cards-heart" size={18} />
-      <Text>{likes}</Text>
-    </View>
-
-    <View style={{ flexDirection: 'row'}}>
-      <Icon name="download" size={18} />
-      <Text>{downloads}</Text>
-    </View>
-  </View>
-);
+// Image Info
 
 interface IDetailImageProps {
   photo: Photo;
@@ -79,8 +50,7 @@ export const D: React.FC<IDetailImageProps> = ({
         <ImageStats
           date={photo.created_at}
           likes={photo.likes}
-          downloads={photo.downloads ? photo.downloads : 0
-          }
+          downloads={photo.downloads ? photo.downloads : 0}
         />
         <View style={{ padding: 15 }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -102,6 +72,22 @@ export const D: React.FC<IDetailImageProps> = ({
             </View>
           </View>
         </View>
+        <Tags tags={photo.tags ? photo.tags : null} />
+        <ImageInfo
+          info={{
+            Dimensions: `${photo.width} x ${photo.height}`,
+            Make: photo.exif!.make,
+            Model: photo.exif!.model,
+            "Exposure time": photo.exif!.exposure_time,
+            Aperture: photo.exif!.aperture,
+            Iso: photo.exif!.iso,
+            "Focal length": photo.exif!.focal_length
+          }}
+        />
+        <CollectionSlider
+          data={photo.related_collections.results}
+          styles={{ marginVertical: 15 }}
+        />
       </ScrollView>
     </View>
   );
