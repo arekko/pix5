@@ -2,101 +2,199 @@ import { PhotoState } from "../constants";
 import { createReducer, updateObject } from "./reducerUtilities";
 
 const initialState: PhotoState = {
-  collections: [],
-  collectionPhotos: undefined,
-  photos: [],
-  photo: undefined,
-  loading: false,
-  error: null
+  collection: {
+    collections: [],
+    collectionPhotos: undefined,
+    loading: false,
+    error: undefined
+  },
+  photoList: {
+    photos: [],
+    loading: false,
+    loadingMore: false,
+    page: 1,
+    perPage: 15,
+    order: "popular",
+    error: undefined
+  },
+  photoDetail: {
+    photo: undefined,
+    loading: false,
+    error: undefined
+  }
 };
 
 // collections
 const fetchCollectionRequest = (state: PhotoState) =>
   updateObject(state, {
-    loading: true,
-    error: null
+    collection: {
+      ...state.collection,
+      loading: true,
+      error: null
+    }
   });
 
 const fetchCollectionSuccess = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    collections: payload,
-    loading: false,
-    error: null
+    collection: {
+      ...state.collection,
+      collections: payload,
+      loading: false,
+      error: null
+    }
   });
 
 const fetchCollectionFailure = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    loading: false,
-    error: payload
+    collection: {
+      ...state.collection,
+      loading: false,
+      error: payload
+    }
   });
 
 const fetchCollectionPhotoRequest = (state: PhotoState) =>
   updateObject(state, {
-    loading: true,
-    error: null
+    collection: {
+      ...state.collection,
+      loading: true,
+      error: null
+    }
   });
 
 const fetchCollecitonPhotoSuccess = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    collectionPhotos: payload,
-    loading: false,
-    error: null
+    collection: {
+      ...state.collection,
+      collectionPhotos: payload,
+      loading: false,
+      error: null
+    }
   });
 
 const fetchCollectionPhotoFailure = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    loading: false,
-    error: payload
+    collection: {
+      ...state.collection,
+      loading: false,
+      error: payload
+    }
   });
 
 const clearCollectionPhotos = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    collectionPhotos: undefined
+    collection: {
+      collectionPhotos: undefined
+    }
   });
 
 /// -----
 
-const fetchPhotosRequest = (state: PhotoState) =>
-  updateObject(state, {
-    loading: true,
-    error: null
+const fetchPhotosRequest = (state: PhotoState) => {
+  console.log(state);
+
+  return updateObject(state, {
+    photoList: {
+      ...state.photoList,
+      loading: true,
+      error: null
+    }
   });
+};
 
 const fetchPhotosSuccess = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    photos: payload,
-    loading: false,
-    error: null
+    photoList: {
+      ...state.photoList,
+      photos: payload,
+      loading: false,
+      error: null
+    }
   });
 
 const fetchPhotosFailure = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    loading: false,
-    error: payload
+    photoList: {
+      ...state.photoList,
+      loading: false,
+      error: payload
+    }
   });
 // ---
 const fetchPhotoRequest = (state: PhotoState) =>
   updateObject(state, {
-    loading: true,
-    error: null
+    photoDetail: {
+      ...state.photoDetail,
+      loading: true,
+      error: null
+    }
   });
 
 const fetchPhotoSuccess = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    photo: payload,
-    loading: false,
-    error: null
+    photoDetail: {
+      ...state.photoDetail,
+      photo: payload,
+      loading: false,
+      error: null
+    }
   });
 
 const fetchPhotoFailure = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    loading: false,
-    error: payload
+    photoDetail: {
+      ...state.photoDetail,
+      loading: false,
+      error: payload
+    }
   });
 
 const clearPhoto = (state: PhotoState) =>
   updateObject(state, {
-    photo: undefined
+    photoDetail: {
+      ...state.photoDetail,
+      photo: undefined
+    }
+  });
+
+const incPage = (state: PhotoState) =>
+  updateObject(state, {
+    photoList: {
+      ...state.photoList,
+      page: state.photoList.page + 1
+    }
+  });
+
+const loadMoreRequest = (state: PhotoState) => {
+  console.log(state);
+
+  return updateObject(state, {
+    photoList: {
+      ...state.photoList,
+      loadingMore: true
+    }
+  });
+};
+
+const loadMoreSuccess = (state: PhotoState, { payload }: any) => {
+  console.log(state);
+
+  return updateObject(state, {
+    photoList: {
+      ...state.photoList,
+      loadingMore: false,
+      photos: [...state.photoList.photos, ...payload]
+    }
+  });
+};
+
+const loadMoreFailure = (state: PhotoState, { payload }: any) =>
+  updateObject(state, {
+    photoList: {
+      ...state.photoList,
+      loadingMore: false,
+      error: payload
+    }
   });
 
 export default createReducer(initialState, {
@@ -113,5 +211,9 @@ export default createReducer(initialState, {
   FETCH_COLLECTION_PHOTOS_SUCCESS: fetchCollecitonPhotoSuccess,
   FETCH_COLLECTION_PHOTOS_FAILURE: fetchCollectionPhotoFailure,
   CLEAR_COLLECTION_PHOTOS: clearCollectionPhotos,
-  CLEAR_PHOTO: clearPhoto
+  CLEAR_PHOTO: clearPhoto,
+  INC_PAGE: incPage,
+  LOAD_MORE_PHOTOS_SUCCESS: loadMoreSuccess,
+  LOAD_MORE_PHOTOS_REQUEST: loadMoreRequest,
+  LOAD_MORE_PHOTOS_FAILURE: loadMoreFailure
 });

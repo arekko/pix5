@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image, Text, View } from "react-native";
+import { Image } from "react-native";
 import { useNavigation } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
@@ -7,24 +7,28 @@ import HeaderTitle from "../components/header-title";
 import { PhotoList } from "../components/photoList/PhotoList";
 import Spinner from "../components/spinner";
 import withUnsplashService from "../hocs";
-import { fetchPhotos } from "../redux-store/actions/photoActions";
-
-const HeaderComponent = () => (
-  <View>
-    <Text>Explore</Text>
-    <Text />
-  </View>
-);
+import {
+  fetchPhotos,
+  loadMorePhotos
+} from "../redux-store/actions/photoActions";
 
 interface Props {
   photos: Image[];
   loading: boolean;
   fetchPhotos: any;
+  loadMore: any;
+  loadingMore: boolean;
 }
 
-export const P: React.FC<Props> = ({ photos, loading, fetchPhotos }) => {
+export const P: React.FC<Props> = ({
+  photos,
+  loading,
+  fetchPhotos,
+  loadMore,
+  loadingMore
+}) => {
   useEffect(() => {
-    fetchPhotos(1, 30, "latest");
+    fetchPhotos();
   }, []);
 
   const { navigate } = useNavigation();
@@ -34,11 +38,14 @@ export const P: React.FC<Props> = ({ photos, loading, fetchPhotos }) => {
       photoId: photoId
     });
   };
+  console.log(photos);
 
   return loading ? (
     <Spinner color="#ddd" type="9CubeGrid" />
   ) : (
     <PhotoList
+      loadMore={loadMore}
+      loadingMore={loading}
       data={photos}
       onPress={onPressPhoto}
       headerComponent={
@@ -52,13 +59,17 @@ export const P: React.FC<Props> = ({ photos, loading, fetchPhotos }) => {
 };
 
 const mapStateToProps = ({ photo }: any) => ({
-  photos: photo.photos,
-  loading: photo.loading
+  photos: photo.photoList.photos,
+  loading: photo.photoList.loading,
+  loadingMore: photo.photoList.loadingMore
 });
 
 const mapDispatchToProps = (dispatch: any, { unsplashApiService }: any) =>
   bindActionCreators(
-    { fetchPhotos: fetchPhotos(unsplashApiService) },
+    {
+      fetchPhotos: fetchPhotos(unsplashApiService),
+      loadMore: loadMorePhotos(unsplashApiService)
+    },
     dispatch
   );
 

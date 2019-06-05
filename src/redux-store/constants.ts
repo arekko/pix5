@@ -24,19 +24,41 @@ export const CLEAR_COLLECTION_PHOTOS = "CLEAR_COLLECTION_PHOTOS";
 
 export const SET_TAB_INDEX = "SET_TAB_INDEX";
 
+export const INC_PAGE = "INC_PAGE";
+
+interface IncPage {
+  type: typeof INC_PAGE;
+}
+
 interface setTabIndex {
   type: typeof SET_TAB_INDEX;
   payload?: number;
 }
 
 export interface PhotoState {
-  collections: Collection[];
-  collectionPhotos: Image[] | undefined;
-  photos: Image[];
-  photo: Image | undefined;
-  loading: boolean;
-  error: any | null;
+  collection: {
+    collections: Collection[];
+    collectionPhotos: Image[] | undefined;
+    loading: boolean;
+    error: any;
+  };
+  photoList: {
+    photos: Image[];
+    page: number;
+    perPage: number;
+    order: Order;
+    loadingMore: boolean;
+    loading: boolean;
+    error: any;
+  };
+  photoDetail: {
+    photo: Image | undefined;
+    loading: boolean;
+    error: any;
+  };
 }
+
+type Order = "latest" | "popular" | "oldest";
 // Collections
 interface CollectionRequested {
   type: typeof FETCH_COLLECTION_REQUEST;
@@ -117,6 +139,26 @@ interface PhotoError {
 interface ClearPhoto {
   type: typeof CLEAR_PHOTO;
 }
+
+// Load more
+export const LOAD_MORE_PHOTOS_REQUEST = "LOAD_MORE_PHOTOS_REQUEST";
+export const LOAD_MORE_PHOTOS_SUCCESS = "LOAD_MORE_PHOTOS_SUCCESS";
+export const LOAD_MORE_PHOTOS_FAILURE = "LOAD_MORE_PHOTOS_FAILURE";
+
+interface LoadMorePhotosRequest {
+  type: typeof LOAD_MORE_PHOTOS_REQUEST;
+}
+
+interface LoadMorePhotosSuccess {
+  type: typeof LOAD_MORE_PHOTOS_SUCCESS;
+  payload: Image[];
+}
+
+interface LoadMorePhotoFailure {
+  type: typeof LOAD_MORE_PHOTOS_FAILURE;
+  payload: any;
+}
+
 export type PhotosActionTypes =
   | PhotosRequested
   | PhotosLoaded
@@ -131,7 +173,11 @@ export type PhotosActionTypes =
   | CollectionPhotosRequest
   | CollectionPhotoSuccess
   | CollectionPhotoFailure
-  | ClearCollecitonPhotos;
+  | ClearCollecitonPhotos
+  | IncPage
+  | LoadMorePhotosRequest
+  | LoadMorePhotoFailure
+  | LoadMorePhotosSuccess;
 
 export type TabsActionTypes = setTabIndex;
 

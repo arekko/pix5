@@ -109,8 +109,8 @@ export const D: React.FC<IDetailImageProps> = ({
 };
 
 const mapStateToProps = ({ photo }: any) => ({
-  photo: photo.photo,
-  loading: photo.loading
+  photo: photo.photoDetail.photo,
+  loading: photo.photoDetail.loading
 });
 
 const mapDispatchToProps = (dispatch: any, { unsplashApiService }: any) =>

@@ -12,6 +12,10 @@ import {
   FETCH_PHOTO_FAILURE,
   FETCH_PHOTO_REQUEST,
   FETCH_PHOTO_SUCCESS,
+  INC_PAGE,
+  LOAD_MORE_PHOTOS_FAILURE,
+  LOAD_MORE_PHOTOS_REQUEST,
+  LOAD_MORE_PHOTOS_SUCCESS,
   PhotosActionTypes
 } from "../constants";
 import { Collection } from "./../../types/index";
@@ -89,6 +93,26 @@ export const clearPhoto = (): PhotosActionTypes => ({
   type: CLEAR_PHOTO
 });
 
+export const incPage = (): PhotosActionTypes => ({
+  type: INC_PAGE
+});
+
+
+
+export const loadMoreRequest = (): PhotosActionTypes => ({
+  type: LOAD_MORE_PHOTOS_REQUEST
+});
+
+export const loadMoreSuccess = (photos: Image[]): PhotosActionTypes => ({
+  type: LOAD_MORE_PHOTOS_SUCCESS,
+  payload: photos
+});
+
+export const loadMoreFailure = (error: any): PhotosActionTypes => ({
+  type: LOAD_MORE_PHOTOS_FAILURE,
+  payload: error
+});
+
 const fetchPhoto = (unsplashApiService: UnsplashApiService) => (id: string) => (
   dispatch: any
 ) => {
@@ -98,25 +122,50 @@ const fetchPhoto = (unsplashApiService: UnsplashApiService) => (id: string) => (
     .then((data: Image) => dispatch(photoLoaded(data)));
 };
 
-const fetchPhotos = (unsplashApiService: UnsplashApiService) => (
-  page: number,
-  perPage: number,
-  orderBy: OrderBy
-) => (dispatch: any) => {
+const fetchPhotos = (unsplashApiService: UnsplashApiService) => () => (
+  dispatch: any,
+  getState: any
+) => {
+  const {
+    photo: {
+      photoList: { page, perPage, order }
+    }
+  } = getState();
+
+  console.log(page, perPage, order);
   dispatch(photosRequested());
   unsplashApiService
-    .getListPhotos(page, perPage, orderBy)
+    .getListPhotos(page, perPage, order)
     .then((data: Image[]) => dispatch(photosLoaded(data)));
 };
 
-const fetchCollections = (unsplashApiService: UnsplashApiService) => (
-  page: number,
-  perPage: number,
-  orderBy: OrderBy
-) => (dispatch: any) => {
+
+
+const loadMorePhotos = (unsplashApiService: UnsplashApiService) => () => (
+  dispatch: any,
+  getState: any
+) => {
+  dispatch(incPage());
+  dispatch(loadMoreRequest());
+  const {
+    photo: {
+      photoList: { page, perPage, order }
+    }
+  } = getState();
+  unsplashApiService
+    .getListPhotos(page, perPage, order)
+    .then((data: Image[]) => dispatch(loadMoreSuccess(data)));
+};
+
+
+
+const fetchCollections = (unsplashApiService: UnsplashApiService) => () => (
+  dispatch: any,
+  getState: any
+) => {
   dispatch(collectionRequested());
   unsplashApiService
-    .getCollectionList(page, perPage, orderBy)
+    .getCollectionList(1, 10, "popular")
     .then((data: Collection[]) => dispatch(collectionSuccess(data)));
 };
 
@@ -125,11 +174,19 @@ const fetchCollectionPhotos = (unsplashApiService: UnsplashApiService) => (
   page: number,
   perPage: number,
   orderBy: OrderBy
-) => (dispatch: any) => {
+) => (dispatch: any, getState: any) => {
+  console.log(getState());
+
   dispatch(collectionPhotosRequested());
   unsplashApiService
     .getCollectionPhotos(id, page, perPage, orderBy)
     .then((data: Image[]) => dispatch(collectionPhotosSuccess(data)));
 };
 
-export { fetchPhotos, fetchPhoto, fetchCollections, fetchCollectionPhotos };
+export {
+  fetchPhotos,
+  fetchPhoto,
+  fetchCollections,
+  fetchCollectionPhotos,
+  loadMorePhotos
+};

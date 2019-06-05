@@ -41,8 +41,6 @@ export const C: React.FC<Props> = ({
     });
   };
 
-  console.log(collections);
-
   return loading || !collections ? (
     <Spinner color="#ddd" type="9CubeGrid" />
   ) : (
@@ -107,8 +105,8 @@ export const C: React.FC<Props> = ({
 };
 
 const mapStateToProps = ({ photo }: any) => ({
-  collections: photo.collections,
-  loading: photo.loading
+  collections: photo.collection.collections,
+  loading: photo.collection.loading
 });
 
 const mapDispatchToProps = (dispatch: any, { unsplashApiService }: any) =>

@@ -13,12 +13,16 @@ interface Props {
   data: Photo[];
   onPress: (id: string) => void;
   headerComponent?: any;
+  loadingMore: boolean;
+  loadMore: any;
 }
 
 export const PhotoList: React.FC<Props> = ({
   data,
   onPress,
-  headerComponent
+  headerComponent,
+  loadingMore,
+  loadMore
 }) => (
   <View style={{ flex: 1, alignItems: "center" }}>
     {
@@ -37,12 +41,15 @@ export const PhotoList: React.FC<Props> = ({
                 marginVertical: 5,
                 margin: 5,
                 borderRadius: 15,
-                width: width /2 - 20,
-                height: width/ 1.5 - 20
+                width: width / 2 - 20,
+                height: width / 1.5 - 20
               }}
             />
           </TouchableOpacity>
         )}
+        onEndReached={() => loadMore()}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={10}
       />
     }
   </View>
