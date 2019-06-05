@@ -15,7 +15,7 @@ interface Props {
   loading: boolean;
   fetchUser: any;
   clearUser: any;
-}
+ }
 
 const PF: React.FC<Props> = ({ user, fetchUser, loading, clearUser }) => {
   const username = useNavigationParam("username");
@@ -54,6 +54,8 @@ const PF: React.FC<Props> = ({ user, fetchUser, loading, clearUser }) => {
     </ScrollView>
   );
 };
+
+
 
 const mapStateToProps = ({ user }: any) => ({
   user: user.user,

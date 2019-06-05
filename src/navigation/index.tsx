@@ -20,7 +20,15 @@ const tempNav = createStackNavigator(
     },
     DetailImage: DetailImage,
     CollectionPhotos: CollectionPhotos,
-    Profile: Profile
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        title: "Profile",
+        headerTitleStyle: {
+          fontSize: 16
+        }
+      }
+    }
   },
   {
     headerLayoutPreset: "center", // default is 'left'
@@ -28,8 +36,9 @@ const tempNav = createStackNavigator(
     defaultNavigationOptions: {
       headerStyle: {
         borderBottomColor: "transparent",
-        elevation: 0 // for android,
+        elevation: 0, // for android,
         // horizontalPadding: 40,
+        height: 40
       },
 
       headerBackTitle: null

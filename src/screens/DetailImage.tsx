@@ -13,6 +13,7 @@ import Tags from "../components/tags";
 import withUnsplashService from "../hocs";
 import { clearPhoto, fetchPhoto } from "../redux-store/actions/photoActions";
 import { Image as Photo } from "../types";
+import navigation from "../navigation";
 
 const screenWidth = Dimensions.get("screen").width;
 
@@ -39,6 +40,7 @@ export const D: React.FC<IDetailImageProps> = ({
       username: username
     });
   };
+
 
   React.useEffect(() => {
     fetchPhoto(photoId);

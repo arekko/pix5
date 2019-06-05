@@ -36,6 +36,7 @@ export const T: React.FC<Props> = ({ tabs, setIndex }) => {
             activeColor="#000"
             inactiveColor="#ddd"
             labelStyle={{ fontWeight: "bold", fontSize: 12 }}
+            tabStyle={{height: 40}}
           />
         )}
       />

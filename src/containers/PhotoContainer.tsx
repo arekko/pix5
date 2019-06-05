@@ -3,11 +3,11 @@ import { Image, Text, View } from "react-native";
 import { useNavigation } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
+import HeaderTitle from "../components/header-title";
 import { PhotoList } from "../components/photoList/PhotoList";
 import Spinner from "../components/spinner";
 import withUnsplashService from "../hocs";
 import { fetchPhotos } from "../redux-store/actions/photoActions";
-import HeaderTitle from "../components/header-title";
 
 const HeaderComponent = () => (
   <View>
