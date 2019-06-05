@@ -24,6 +24,7 @@ export const PhotoList: React.FC<Props> = ({
     {
       <FlatList
         data={data}
+        numColumns={2}
         ListHeaderComponent={headerComponent ? headerComponent : null}
         keyExtractor={(item, i) => `${item.id}${i}`}
         showsVerticalScrollIndicator={false}
@@ -33,11 +34,11 @@ export const PhotoList: React.FC<Props> = ({
               source={{ uri: item.urls.small }}
               style={{
                 backgroundColor: item.color,
-                marginVertical: 10,
-                // margin: 5,
+                marginVertical: 5,
+                margin: 5,
                 borderRadius: 15,
-                width: width - 20,
-                height: width - 20
+                width: width /2 - 20,
+                height: width/ 1.5 - 20
               }}
             />
           </TouchableOpacity>

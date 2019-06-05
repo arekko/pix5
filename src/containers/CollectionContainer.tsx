@@ -10,6 +10,7 @@ import {
 import { useNavigation } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
+import HeaderTitle from "../components/header-title";
 import Spinner from "../components/spinner";
 import withUnsplashService from "../hocs";
 import { fetchCollections } from "../redux-store/actions/photoActions";
@@ -55,19 +56,19 @@ export const C: React.FC<Props> = ({
               source={{ uri: item.cover_photo!.urls.regular }}
               style={{
                 width: screenWidth - 20,
-                height: screenWidth / 1.5,
+                height: 180,
                 borderRadius: 15
               }}
             />
           </TouchableOpacity>
-          <View style={{ flexDirection: "column", padding: 15 }}>
+          <View style={{ flexDirection: "column", padding: 10 }}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 15,
                 color: "rgba(21,28,42,0.87)",
                 lineHeight: 22,
                 fontWeight: "bold",
-                paddingVertical: 5
+                paddingVertical: 2
               }}
             >
               {item.title}
@@ -75,7 +76,7 @@ export const C: React.FC<Props> = ({
             <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
-                  fontSize: 15,
+                  fontSize: 14,
                   color: "#999"
                 }}
               >
@@ -95,6 +96,12 @@ export const C: React.FC<Props> = ({
           </View>
         </View>
       )}
+      ListHeaderComponent={
+        <HeaderTitle
+          title="Collections"
+          subtitle="Explore the world through collections of beautiful HD pictures"
+        />
+      }
     />
   );
 };

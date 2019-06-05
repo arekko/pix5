@@ -1,4 +1,4 @@
-import { Collection, Image } from "../types";
+import { Collection, Image, User } from "../types";
 
 export const FETCH_PHOTOS_REQUEST = "FETCH_PHOTOS_REQUEST";
 export const FETCH_PHOTOS_SUCCESS = "FETCH_PHOTOS_SUCCESS";
@@ -134,3 +134,38 @@ export type PhotosActionTypes =
   | ClearCollecitonPhotos;
 
 export type TabsActionTypes = setTabIndex;
+
+// User actions
+
+export const FETCH_USER_REQUEST = "FETCH_USER_REQUEST";
+export const FETCH_USER_SUCCESS = "FETCH_USER_SUCCESS";
+export const FETCH_USER_FAILURE = "FETCH_USER_FAILURE";
+export const CLEAR_USER = "CLEAR_USER";
+
+export interface UserState {
+  user: User | undefined;
+  currentUser: User | undefined;
+  loading: boolean;
+  error: any | undefined;
+}
+
+interface UserRequest {
+  type: typeof FETCH_USER_REQUEST;
+}
+
+interface UserSuccess {
+  type: typeof FETCH_USER_SUCCESS;
+  payload: User;
+}
+
+interface UserFailure {
+  type: typeof FETCH_USER_FAILURE;
+  payload: any;
+}
+
+interface ClearUser {
+  type: typeof CLEAR_USER;
+}
+// TODO: clear user
+
+export type UserActions = UserRequest | UserSuccess | UserFailure | ClearUser;

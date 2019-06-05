@@ -88,4 +88,15 @@ export default class UnsplashApiService {
       )
     );
   }
+
+  /**
+   * Retrieve public user info
+   *
+   * @param {string} username
+   * @returns
+   * @memberof UnsplashApiService
+   */
+  async getUser(username: string) {
+    return await toJson(await this.unsplash.users.profile(username));
+  }
 }

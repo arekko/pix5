@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Dimensions, ScrollView, Text, View } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Image from "react-native-scalable-image";
-import { useNavigationParam } from "react-navigation-hooks";
+import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
 import { CollectionSlider } from "../components/collection-slider/CollectionSlider";
@@ -31,6 +32,13 @@ export const D: React.FC<IDetailImageProps> = ({
   clearPhoto
 }) => {
   const photoId = useNavigationParam("photoId");
+  const { navigate } = useNavigation();
+
+  const onPressProfile = (username: string) => {
+    navigate("Profile", {
+      username: username
+    });
+  };
 
   React.useEffect(() => {
     fetchPhoto(photoId);
@@ -52,7 +60,11 @@ export const D: React.FC<IDetailImageProps> = ({
           likes={photo.likes}
           downloads={photo.downloads ? photo.downloads : 0}
         />
-        <View style={{ padding: 15 }}>
+
+        <TouchableOpacity
+          style={{ padding: 15 }}
+          onPress={() => onPressProfile(photo.user.username)}
+        >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Image
               source={{ uri: photo.user.profile_image.medium }}
@@ -71,7 +83,8 @@ export const D: React.FC<IDetailImageProps> = ({
               </View>
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
+
         <Tags tags={photo.tags ? photo.tags : null} />
         <ImageInfo
           info={{

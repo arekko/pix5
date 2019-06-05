@@ -65,8 +65,17 @@ export interface Collection {
   user: User;
 }
 
+// User
+
 export interface User {
   id: string;
+  updated_at: string;
+  first_name: string;
+  last_name: string;
+  followed_by_user: boolean;
+  followers_count: number;
+  following_count: number;
+  downloads: number;
   username: string;
   name: string;
   portfolio_url: string | null;
@@ -79,6 +88,13 @@ export interface User {
   twitter_username: string;
   profile_image: ProfileImage;
   links: UserLinks;
+  badge: Badge;
+}
+interface Badge {
+  title: string;
+  primary: boolean;
+  slug: string;
+  link: string;
 }
 
 export interface ProfileImage {
