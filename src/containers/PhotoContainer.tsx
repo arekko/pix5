@@ -45,7 +45,7 @@ export const P: React.FC<Props> = ({
   ) : (
     <PhotoList
       loadMore={loadMore}
-      loadingMore={loading}
+      loadingMore={loadingMore}
       data={photos}
       onPress={onPressPhoto}
       headerComponent={

@@ -6,14 +6,12 @@ import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
 import { CollectionSlider } from "../components/collection-slider/CollectionSlider";
-import ImageInfo from "../components/image-info";
 import ImageStats from "../components/image-stats";
 import Spinner from "../components/spinner";
 import Tags from "../components/tags";
 import withUnsplashService from "../hocs";
 import { clearPhoto, fetchPhoto } from "../redux-store/actions/photoActions";
 import { Image as Photo } from "../types";
-import navigation from "../navigation";
 
 const screenWidth = Dimensions.get("screen").width;
 
@@ -40,7 +38,6 @@ export const D: React.FC<IDetailImageProps> = ({
       username: username
     });
   };
-
 
   React.useEffect(() => {
     fetchPhoto(photoId);
@@ -88,7 +85,7 @@ export const D: React.FC<IDetailImageProps> = ({
         </TouchableOpacity>
 
         <Tags tags={photo.tags ? photo.tags : null} />
-        <ImageInfo
+        {/* <ImageInfo
           info={{
             Dimensions: `${photo.width} x ${photo.height}`,
             Make: photo.exif!.make,
@@ -98,7 +95,7 @@ export const D: React.FC<IDetailImageProps> = ({
             Iso: photo.exif!.iso,
             "Focal length": photo.exif!.focal_length
           }}
-        />
+        /> */}
         <CollectionSlider
           data={photo.related_collections.results}
           styles={{ marginVertical: 15 }}
