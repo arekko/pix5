@@ -25,66 +25,67 @@ export default class UnsplashApiService {
    * @returns {Promise<Image[]>}
    * @memberof UnsplashApiService
    */
-  async getListPhotos(
-    page: number,
-    perPage: number,
-    orderBy: OrderBy
-  ): Promise<Image[]> {
+  async fetchPhotos({
+    page,
+    perPage,
+    order
+  }: {
+    page: number;
+    perPage: number;
+    order: OrderBy;
+  }): Promise<Image[]> {
     return await toJson(
-      await this.unsplash.photos.listPhotos(page, perPage, orderBy)
+      await this.unsplash.photos.listPhotos(page, perPage, order)
     );
   }
 
-  /**
-   * Return Image details
-   *
-   * @static
-   * @param {string} id
-   * @param {string} [width]
-   * @param {string} [height]
-   * @param {number[]} [rectangle]
-   * @returns {Promise<Image>}
-   * @memberof UnsplashApiService
-   */
-  async getPhoto(
-    id: string,
-    width?: string,
-    height?: string,
-    rectangle?: number[]
-  ): Promise<Image> {
-    // const data = await unsplash.photos.getPhoto(id, width, height, rectangle);
+  async fetchPhoto({
+    id,
+    width,
+    height,
+    rectangle
+  }: {
+    id: string;
+    width?: string;
+    height?: string;
+    rectangle?: number[];
+  }): Promise<Image> {
     return await toJson(
       await this.unsplash.photos.getPhoto(id, width, height, rectangle)
     );
   }
 
-  /**
-   * Return the list of collection upon assigned criterias
-   *
-   * @param {number} page
-   * @param {number} perPage
-   * @param {OrderBy} orderBy
-   * @returns
-   * @memberof UnsplashApiService
-   */
-  async getCollectionList(page: number, perPage: number, orderBy: OrderBy) {
+  async fetchCollections({
+    page,
+    perPage,
+    order
+  }: {
+    page: number;
+    perPage: number;
+    order: OrderBy;
+  }) {
     return await toJson(
-      await this.unsplash.collections.listCollections(page, perPage, orderBy)
+      await this.unsplash.collections.listCollections(page, perPage, order)
     );
   }
 
-  async getCollectionPhotos(
-    id: number,
-    page: number,
-    perPage: number,
-    orderBy: OrderBy
-  ) {
+  async fetchPhotosFromCollection({
+    id,
+    page,
+    perPage,
+    order
+  }: {
+    id: number;
+    page: number;
+    perPage: number;
+    order: OrderBy;
+  }) {
     return await toJson(
       await this.unsplash.collections.getCollectionPhotos(
         id,
         page,
         perPage,
-        orderBy
+        order
       )
     );
   }

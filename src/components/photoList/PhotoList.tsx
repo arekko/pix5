@@ -7,7 +7,7 @@ import {
   View
 } from "react-native";
 import { Image as Photo } from "../../types";
-import Spinner from "../spinner";
+import FooterSpinner from "../footer-spinner";
 const width = Dimensions.get("screen").width;
 
 interface Props {
@@ -22,18 +22,9 @@ export const PhotoList: React.FC<Props> = ({
   data,
   onPress,
   headerComponent,
-  loadingMore,
+  loadingMore = false,
   loadMore
 }) => {
-  const renderFooter = () => {
-    return loadingMore ? (
-      <View style={{ padding: 10 }}>
-        <Spinner color="#ddd" type="9CubeGrid" />
-      </View>
-    ) : null;
-  };
-  console.log("loading more", loadingMore);
-
   return (
     <View style={{ flex: 1, alignItems: "center" }}>
       {
@@ -61,7 +52,7 @@ export const PhotoList: React.FC<Props> = ({
           onEndReached={() => loadMore()}
           onEndReachedThreshold={0.5}
           initialNumToRender={10}
-          ListFooterComponent={renderFooter()}
+          ListFooterComponent={<FooterSpinner loadingMore={loadingMore} />}
         />
       }
     </View>

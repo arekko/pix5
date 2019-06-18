@@ -9,14 +9,6 @@ export const UnsplashServiceProvider = createContext({});
 const unsplashService = new UnsplashApiService();
 
 const App: React.FC<{}> = props => {
-  // useEffect(() => {
-  //   UnsplashApiService.getListPhotos(2, 0, "popular").then((data: any) =>
-  //     console.log(data)
-  //   );
-  //   UnsplashApiService.getPhoto("IuLgi9PWETU").then((data: Image) =>
-  //     console.log(data.urls.thumb)
-  //   );
-  // });
 
   return (
     <Provider store={store}>

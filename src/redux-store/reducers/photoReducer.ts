@@ -4,9 +4,21 @@ import { createReducer, updateObject } from "./reducerUtilities";
 const initialState: PhotoState = {
   collection: {
     collections: [],
+    loading: false,
+    error: undefined,
+    page: 1,
+    perPage: 5,
+    order: "popular",
+    loadingMore: false
+  },
+  collectionPhotos: {
     collectionPhotos: undefined,
     loading: false,
-    error: undefined
+    error: undefined,
+    page: 1,
+    perPage: 15,
+    order: "popular",
+    loadingMore: false
   },
   photoList: {
     photos: [],
@@ -14,7 +26,7 @@ const initialState: PhotoState = {
     loadingMore: false,
     page: 1,
     perPage: 15,
-    order: "popular",
+    order: "latest",
     error: undefined
   },
   photoDetail: {
@@ -55,8 +67,8 @@ const fetchCollectionFailure = (state: PhotoState, { payload }: any) =>
 
 const fetchCollectionPhotoRequest = (state: PhotoState) =>
   updateObject(state, {
-    collection: {
-      ...state.collection,
+    collectionPhotos: {
+      ...state.collectionPhotos,
       loading: true,
       error: null
     }
@@ -64,8 +76,8 @@ const fetchCollectionPhotoRequest = (state: PhotoState) =>
 
 const fetchCollecitonPhotoSuccess = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    collection: {
-      ...state.collection,
+    collectionPhotos: {
+      ...state.collectionPhotos,
       collectionPhotos: payload,
       loading: false,
       error: null
@@ -74,8 +86,8 @@ const fetchCollecitonPhotoSuccess = (state: PhotoState, { payload }: any) =>
 
 const fetchCollectionPhotoFailure = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    collection: {
-      ...state.collection,
+    collectionPhotos: {
+      ...state.collectionPhotos,
       loading: false,
       error: payload
     }
@@ -83,8 +95,10 @@ const fetchCollectionPhotoFailure = (state: PhotoState, { payload }: any) =>
 
 const clearCollectionPhotos = (state: PhotoState, { payload }: any) =>
   updateObject(state, {
-    collection: {
-      collectionPhotos: undefined
+    collectionPhotos: {
+      ...state.collectionPhotos,
+      collectionPhotos: undefined,
+      page: 1
     }
   });
 
@@ -197,6 +211,69 @@ const loadMoreFailure = (state: PhotoState, { payload }: any) =>
     }
   });
 
+//ddddd
+const setCollectionPage = (state: PhotoState, { payload }: any) =>
+  updateObject(state, {
+    collection: {
+      ...state.collection,
+      page: payload
+    }
+  });
+
+const setCollectionPhotosPage = (state: PhotoState, { payload }: any) =>
+  updateObject(state, {
+    collectionPhotos: {
+      ...state.collectionPhotos,
+      page: payload
+    }
+  });
+
+const fetchMoreCollectionsRequest = (state: PhotoState) => {
+  return updateObject(state, {
+    collection: {
+      ...state.collection,
+      loadingMore: true
+    }
+  });
+};
+
+const fetchMoreCollectionPhotosRequest = (state: PhotoState) => {
+  return updateObject(state, {
+    collectionPhotos: {
+      ...state.collectionPhotos,
+      loadingMore: true
+    }
+  });
+};
+
+const fetchMoreCollectionSuccess = (state: PhotoState, { payload }: any) => {
+  return updateObject(state, {
+    collection: {
+      ...state.collection,
+      loadingMore: false,
+      collections: [...state.collection.collections, ...payload]
+    }
+  });
+};
+
+const fetchMoreCollectionPhotosSuccess = (
+  state: PhotoState,
+  { payload }: any
+) => {
+  return updateObject(state, {
+    collectionPhotos: {
+      ...state.collectionPhotos,
+      loadingMore: false,
+      collectionPhotos: [
+        ...state.collectionPhotos.collectionPhotos!,
+        ...payload
+      ]
+    }
+  });
+};
+
+//TODO: make failure
+
 export default createReducer(initialState, {
   FETCH_PHOTOS_REQUEST: fetchPhotosRequest,
   FETCH_PHOTOS_SUCCESS: fetchPhotosSuccess,
@@ -215,5 +292,11 @@ export default createReducer(initialState, {
   INC_PAGE: incPage,
   LOAD_MORE_PHOTOS_SUCCESS: loadMoreSuccess,
   LOAD_MORE_PHOTOS_REQUEST: loadMoreRequest,
-  LOAD_MORE_PHOTOS_FAILURE: loadMoreFailure
+  LOAD_MORE_PHOTOS_FAILURE: loadMoreFailure,
+  SET_COLLECTION_PAGE: setCollectionPage,
+  SET_COLLECTION_PHOTOS_PAGE: setCollectionPhotosPage,
+  FETCH_MORE_COLLECTIONS_REQUEST: fetchMoreCollectionsRequest,
+  FETCH_MORE_COLLECTIONS_SUCCESS: fetchMoreCollectionSuccess,
+  FETCH_MORE_COLLECTIONS_PHOTOS_REQUEST: fetchMoreCollectionPhotosRequest,
+  FETCH_MORE_COLLECTIONS_PHOTOS_SUCCESS: fetchMoreCollectionPhotosSuccess
 });

@@ -10,16 +10,22 @@ import {
 import { useNavigation } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
+import FooterSpinner from "../components/footer-spinner";
 import HeaderTitle from "../components/header-title";
 import Spinner from "../components/spinner";
 import withUnsplashService from "../hocs";
-import { fetchCollections } from "../redux-store/actions/photoActions";
+import {
+  fetchCollections,
+  fetchMoreCollections
+} from "../redux-store/actions/photoActions";
 import { Collection } from "../types";
 
 interface Props {
   collections: Collection[];
   loading: boolean;
   fetchCollections: any;
+  fetchMoreCollections: any;
+  loadingMore: boolean;
 }
 
 const screenWidth = Dimensions.get("window").width;
@@ -27,17 +33,26 @@ const screenWidth = Dimensions.get("window").width;
 export const C: React.FC<Props> = ({
   collections,
   loading,
-  fetchCollections
+  fetchCollections,
+  fetchMoreCollections,
+  loadingMore
 }) => {
   useEffect(() => {
-    fetchCollections(1, 10, "popular");
+    fetchCollections();
   }, []);
 
   const { navigate } = useNavigation();
 
-  const onPressCollection = (colId: number) => {
+  const onPressCollection = ({
+    colId,
+    collectionSize
+  }: {
+    colId: number;
+    collectionSize: number;
+  }) => {
     navigate("CollectionPhotos", {
-      colId: colId
+      colId: colId,
+      collectionSize
     });
   };
 
@@ -49,7 +64,14 @@ export const C: React.FC<Props> = ({
       keyExtractor={item => `${item.id}`}
       renderItem={({ item }) => (
         <View style={{ padding: 10 }}>
-          <TouchableOpacity onPress={() => onPressCollection(item.id)}>
+          <TouchableOpacity
+            onPress={() =>
+              onPressCollection({
+                colId: item.id,
+                collectionSize: item.total_photos
+              })
+            }
+          >
             <Image
               source={{ uri: item.cover_photo!.urls.regular }}
               style={{
@@ -100,18 +122,26 @@ export const C: React.FC<Props> = ({
           subtitle="Explore the world through collections of beautiful HD pictures"
         />
       }
+      onEndReached={() => fetchMoreCollections()}
+      onEndReachedThreshold={0.5}
+      initialNumToRender={10}
+      ListFooterComponent={<FooterSpinner loadingMore={loadingMore} />}
     />
   );
 };
 
 const mapStateToProps = ({ photo }: any) => ({
   collections: photo.collection.collections,
-  loading: photo.collection.loading
+  loading: photo.collection.loading,
+  loadingMore: photo.collection.loadingMore
 });
 
 const mapDispatchToProps = (dispatch: any, { unsplashApiService }: any) =>
   bindActionCreators(
-    { fetchCollections: fetchCollections(unsplashApiService) },
+    {
+      fetchCollections: fetchCollections(unsplashApiService),
+      fetchMoreCollections: fetchMoreCollections(unsplashApiService)
+    },
     dispatch
   );
 

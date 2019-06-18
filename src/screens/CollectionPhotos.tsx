@@ -1,6 +1,6 @@
 import React from "react";
 import { Image } from "react-native";
-import { useNavigationParam, useNavigation } from "react-navigation-hooks";
+import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
 import { PhotoList } from "../components/photoList/PhotoList";
@@ -8,7 +8,8 @@ import Spinner from "../components/spinner";
 import withUnsplashService from "../hocs";
 import {
   clearCollectionPhotos,
-  fetchCollectionPhotos
+  fetchCollectionPhotos,
+  fetchMoreCollectionPhotos
 } from "../redux-store/actions/photoActions";
 
 interface Props {
@@ -16,18 +17,21 @@ interface Props {
   loading: boolean;
   fetchCollectionPhotos: any;
   clearCollectionPhotos: any;
+  fetchMoreCollectionPhotos: any;
 }
 
 export const P: React.FC<Props> = ({
   collectionPhotos,
   loading,
   fetchCollectionPhotos,
-  clearCollectionPhotos
+  clearCollectionPhotos,
+  fetchMoreCollectionPhotos
 }) => {
   const colId = useNavigationParam("colId");
+  const collectionSize = useNavigationParam("collectionSize");
 
   React.useEffect(() => {
-    fetchCollectionPhotos(colId, 1, 15, "popular");
+    fetchCollectionPhotos(colId);
     return () => clearCollectionPhotos();
   }, []);
 
@@ -39,22 +43,30 @@ export const P: React.FC<Props> = ({
     });
   };
 
+  const fetchMorePhotos = () =>
+    fetchMoreCollectionPhotos({ id: colId, collectionSize: collectionSize });
+
   return loading ? (
     <Spinner color="#ddd" type="9CubeGrid" />
   ) : (
-    <PhotoList data={collectionPhotos} onPress={onPressPhoto} />
+    <PhotoList
+      data={collectionPhotos}
+      onPress={onPressPhoto}
+      loadMore={fetchMorePhotos}
+    />
   );
 };
 
 const mapStateToProps = ({ photo }: any) => ({
-  collectionPhotos: photo.collectionPhotos,
-  loading: photo.loading
+  collectionPhotos: photo.collectionPhotos.collectionPhotos,
+  loading: photo.collectionPhotos.loading
 });
 
 const mapDispatchToProps = (dispatch: any, { unsplashApiService }: any) =>
   bindActionCreators(
     {
       fetchCollectionPhotos: fetchCollectionPhotos(unsplashApiService),
+      fetchMoreCollectionPhotos: fetchMoreCollectionPhotos(unsplashApiService),
       clearCollectionPhotos
     },
     dispatch

@@ -26,6 +26,20 @@ export const SET_TAB_INDEX = "SET_TAB_INDEX";
 
 export const INC_PAGE = "INC_PAGE";
 
+export const SET_COLLECTION_PAGE = "SET_COLLECTION_PAGE";
+export const SET_COLLECTION_PHOTOS_PAGE = "SET_COLLECTION_PHOTOS_PAGE";
+
+export const FETCH_MORE_COLLECTIONS_REQUEST = "FETCH_MORE_COLLECTIONS_REQUEST";
+export const FETCH_MORE_COLLECTIONS_SUCCESS = "FETCH_MORE_COLLECTIONS_SUCCESS";
+export const FETCH_MORE_COLLECTIONS_FAILURE = "FETCH_MORE_COLLECTIONS_FAILURE";
+
+export const FETCH_MORE_COLLECTIONS_PHOTOS_REQUEST =
+  "FETCH_MORE_COLLECTIONS_PHOTOS_REQUEST";
+export const FETCH_MORE_COLLECTIONS_PHOTOS_SUCCESS =
+  "FETCH_MORE_COLLECTIONS_PHOTOS_SUCCESS";
+export const FETCH_MORE_COLLECTIONS_PHOTOS_FAILURE =
+  "FETCH_MORE_COLLECTIONS_PHOTOS_FAILURE";
+
 interface IncPage {
   type: typeof INC_PAGE;
 }
@@ -38,9 +52,21 @@ interface setTabIndex {
 export interface PhotoState {
   collection: {
     collections: Collection[];
+    loading: boolean;
+    error: any;
+    page: number;
+    perPage: number;
+    order: Order;
+    loadingMore: boolean;
+  };
+  collectionPhotos: {
     collectionPhotos: Image[] | undefined;
     loading: boolean;
     error: any;
+    page: number;
+    perPage: number;
+    order: Order;
+    loadingMore: boolean;
   };
   photoList: {
     photos: Image[];
