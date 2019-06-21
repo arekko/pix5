@@ -2,8 +2,7 @@ import * as React from "react";
 import {
   Alert,
   Dimensions,
-  Image as ImageRn,
-  NativeModules,
+  Linking,
   ScrollView,
   Share,
   Text,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Image from "react-native-scalable-image";
+import WallPaperManager from "react-native-wallpaper-manager";
 import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
@@ -85,11 +85,10 @@ export const D: React.FC<IDetailImageProps> = ({
   };
 
   const setWallpaper = (source: string, callback: any) => {
-    NativeModules.WallPaperManager.setWallpaper(
-      ImageRn.resolveAssetSource(source),
-      callback
-    );
+    WallPaperManager.setWallpaper({ uri: source }, callback);
   };
+
+  const downloadImage = (source: string) => Linking.openURL(source);
 
   return loading || !photo ? (
     <Spinner color="#ddd" type="9CubeGrid" />
@@ -118,7 +117,7 @@ export const D: React.FC<IDetailImageProps> = ({
             <TouchableIcon
               name="cloud-download-outline"
               size={25}
-              onPress={onShare}
+              onPress={() => downloadImage(photo.links.download)}
             />
             <TouchableIcon
               name="wallpaper"
