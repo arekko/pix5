@@ -3,11 +3,13 @@ import { Image } from "react-native";
 import { useNavigation, useNavigationParam } from "react-navigation-hooks";
 import { connect } from "react-redux";
 import { bindActionCreators, compose } from "redux";
+import HeaderTitle from "../components/header-title";
 import { PhotoList } from "../components/photoList/PhotoList";
 import Spinner from "../components/spinner";
 import withUnsplashService from "../hocs";
 import {
   clearCollectionPhotos,
+  clearPhoto,
   fetchCollectionPhotos,
   fetchMoreCollectionPhotos
 } from "../redux-store/actions/photoActions";
@@ -18,6 +20,7 @@ interface Props {
   fetchCollectionPhotos: any;
   clearCollectionPhotos: any;
   fetchMoreCollectionPhotos: any;
+  clearPhoto: any;
 }
 
 export const P: React.FC<Props> = ({
@@ -25,15 +28,17 @@ export const P: React.FC<Props> = ({
   loading,
   fetchCollectionPhotos,
   clearCollectionPhotos,
-  fetchMoreCollectionPhotos
+  fetchMoreCollectionPhotos,
+  clearPhoto
 }) => {
   const colId = useNavigationParam("colId");
-  const collectionSize = useNavigationParam("collectionSize");
+  const collectionAuthor = useNavigationParam("author");
+  const collectionTitle = useNavigationParam("title");
 
   React.useEffect(() => {
     fetchCollectionPhotos(colId);
     return () => clearCollectionPhotos();
-  }, []);
+  }, [colId]);
 
   const { navigate } = useNavigation();
 
@@ -43,8 +48,7 @@ export const P: React.FC<Props> = ({
     });
   };
 
-  const fetchMorePhotos = () =>
-    fetchMoreCollectionPhotos({ id: colId, collectionSize: collectionSize });
+  const fetchMorePhotos = () => fetchMoreCollectionPhotos({ id: colId });
 
   return loading ? (
     <Spinner color="#ddd" type="9CubeGrid" />
@@ -53,6 +57,12 @@ export const P: React.FC<Props> = ({
       data={collectionPhotos}
       onPress={onPressPhoto}
       loadMore={fetchMorePhotos}
+      headerComponent={
+        <HeaderTitle
+          title={collectionTitle}
+          subtitle={`created by ${collectionAuthor}`}
+        />
+      }
     />
   );
 };
@@ -67,7 +77,8 @@ const mapDispatchToProps = (dispatch: any, { unsplashApiService }: any) =>
     {
       fetchCollectionPhotos: fetchCollectionPhotos(unsplashApiService),
       fetchMoreCollectionPhotos: fetchMoreCollectionPhotos(unsplashApiService),
-      clearCollectionPhotos
+      clearCollectionPhotos,
+      clearPhoto
     },
     dispatch
   );

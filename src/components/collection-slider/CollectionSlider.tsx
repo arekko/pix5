@@ -6,9 +6,14 @@ import CollectionCover from "../collection-cover";
 interface Props {
   data: Collection[];
   styles?: any;
+  onPressCollection: any;
 }
 
-export const CollectionSlider: React.FC<Props> = ({ data, styles = {} }) => {
+export const CollectionSlider: React.FC<Props> = ({
+  data,
+  styles = {},
+  onPressCollection
+}) => {
   return (
     <FlatList
       style={{ ...styles }}
@@ -20,7 +25,10 @@ export const CollectionSlider: React.FC<Props> = ({ data, styles = {} }) => {
       keyExtractor={(item, i) => `${item.id}${i}`}
       snapToAlignment="center"
       renderItem={({ item }: { item: Collection }) => (
-        <CollectionCover collection={item} onPress={() => {}} />
+        <CollectionCover
+          collection={item}
+          onPressCollection={onPressCollection}
+        />
       )}
     />
   );

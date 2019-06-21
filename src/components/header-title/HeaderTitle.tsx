@@ -9,7 +9,11 @@ export const HeaderTitle = ({
   subtitle: string;
 }) => (
   <View style={{ padding: 20 }}>
-    <Text style={{ fontSize: 32, color: "rgba(21,28,42,0.87)" }}>{title}</Text>
-    <Text style={{ marginVertical: 5 }}>{subtitle}</Text>
+    <Text testID="title" style={{ fontSize: 32, color: "rgba(21,28,42,0.87)" }}>
+      {title}
+    </Text>
+    <Text testID="subtitle" style={{ marginVertical: 5 }}>
+      {subtitle}
+    </Text>
   </View>
 );

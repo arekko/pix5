@@ -8,11 +8,13 @@ const screenWidth = Dimensions.get("screen").width;
 
 export const CollectionCover = ({
   collection,
-  onPress
+  onPressCollection
 }: {
   collection: Collection;
-  onPress: (id: number) => void;
+  onPressCollection: any;
 }) => {
+  console.log(collection.id);
+
   return (
     <TouchableOpacity
       style={{
@@ -20,9 +22,15 @@ export const CollectionCover = ({
         alignItems: "center",
         width: screenWidth
       }}
-      onPress={() => onPress(collection.id)}
+      onPress={() =>
+        onPressCollection({
+          colId: collection.id,
+          author: collection.user.username,
+          title: collection.title
+        })
+      }
     >
-      <View style={{position: 'relative', width: screenWidth - 30}}>
+      <View style={{ position: "relative", width: screenWidth - 30 }}>
         <Image
           source={{ uri: collection.cover_photo!.urls.small }}
           style={{

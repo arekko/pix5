@@ -45,14 +45,17 @@ export const C: React.FC<Props> = ({
 
   const onPressCollection = ({
     colId,
-    collectionSize
+    title,
+    author
   }: {
     colId: number;
-    collectionSize: number;
+    title: string;
+    author: string;
   }) => {
     navigate("CollectionPhotos", {
       colId: colId,
-      collectionSize
+      title,
+      author
     });
   };
 
@@ -68,7 +71,8 @@ export const C: React.FC<Props> = ({
             onPress={() =>
               onPressCollection({
                 colId: item.id,
-                collectionSize: item.total_photos
+                title: item.title,
+                author: item.user.username
               })
             }
           >

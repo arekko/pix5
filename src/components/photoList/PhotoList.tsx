@@ -1,24 +1,10 @@
 import * as React from "react";
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  View
-} from "react-native";
-import { Image as Photo } from "../../types";
+import { FlatList, View } from "react-native";
 import FooterSpinner from "../footer-spinner";
-const width = Dimensions.get("screen").width;
+import PhotoListItem from "../photo-list-item";
+import { PhotoListProps } from "./types";
 
-interface Props {
-  data: Photo[];
-  onPress: (id: string) => void;
-  headerComponent?: any;
-  loadingMore: boolean;
-  loadMore: any;
-}
-
-export const PhotoList: React.FC<Props> = ({
+export const PhotoList: React.FC<PhotoListProps> = ({
   data,
   onPress,
   headerComponent,
@@ -26,35 +12,22 @@ export const PhotoList: React.FC<Props> = ({
   loadMore
 }) => {
   return (
-    <View style={{ flex: 1, alignItems: "center" }}>
-      {
-        <FlatList
-          data={data}
-          numColumns={2}
-          ListHeaderComponent={headerComponent ? headerComponent : null}
-          keyExtractor={(item, i) => `${item.id}${i}`}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }: any) => (
-            <TouchableOpacity onPress={() => onPress(item.id)}>
-              <Image
-                source={{ uri: item.urls.small }}
-                style={{
-                  backgroundColor: item.color,
-                  marginVertical: 5,
-                  margin: 5,
-                  borderRadius: 15,
-                  width: width / 2 - 20,
-                  height: width / 1.5 - 20
-                }}
-              />
-            </TouchableOpacity>
-          )}
-          onEndReached={() => loadMore()}
-          onEndReachedThreshold={0.5}
-          initialNumToRender={10}
-          ListFooterComponent={<FooterSpinner loadingMore={loadingMore} />}
-        />
-      }
+    <View style={{ flex: 1, width: "100%", alignItems: "center" }}>
+      <FlatList
+        contentContainerStyle={{ marginHorizontal: 5 }}
+        data={data}
+        numColumns={2}
+        ListHeaderComponent={headerComponent ? headerComponent : null}
+        keyExtractor={(item, i) => `${item.id}${i}`}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }: any) => (
+          <PhotoListItem item={item} onPress={onPress} />
+        )}
+        onEndReached={() => loadMore()}
+        onEndReachedThreshold={0.5}
+        initialNumToRender={10}
+        ListFooterComponent={<FooterSpinner loadingMore={loadingMore} />}
+      />
     </View>
   );
 };
