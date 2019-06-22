@@ -10,11 +10,11 @@ const tempNav = createStackNavigator(
       screen: Feed,
       navigationOptions: {
         // header: null // hide header,
-        title: "PIXR",
+        title: "GLAA",
         headerTitleStyle: {
           fontFamily: "Anurati-Regular",
           fontWeight: null,
-          fontSize: 18
+          fontSize: 14
         }
       }
     },

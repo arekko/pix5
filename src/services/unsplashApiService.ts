@@ -15,16 +15,6 @@ export default class UnsplashApiService {
     secret: this.secret
   });
 
-  /**
-   * Return list of images by params
-   *
-   * @static
-   * @param {number} page
-   * @param {number} perPage
-   * @param {OrderBy} orderBy
-   * @returns {Promise<Image[]>}
-   * @memberof UnsplashApiService
-   */
   async fetchPhotos({
     page,
     perPage,
@@ -90,14 +80,25 @@ export default class UnsplashApiService {
     );
   }
 
-  /**
-   * Retrieve public user info
-   *
-   * @param {string} username
-   * @returns
-   * @memberof UnsplashApiService
-   */
-  async getUser(username: string) {
+  async fetchUser(username: string) {
     return await toJson(await this.unsplash.users.profile(username));
+  }
+
+  async fetchUserPhotos({
+    username,
+    page,
+    perPage,
+    order,
+    states = false
+  }: {
+    username: string;
+    page?: number;
+    perPage?: number;
+    order?: OrderBy;
+    states?: boolean;
+  }) {
+    return await toJson(
+      await this.unsplash.users.photos(username, page, perPage, order, states)
+    );
   }
 }

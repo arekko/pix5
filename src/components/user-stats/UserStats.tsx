@@ -18,19 +18,19 @@ export const UserStats = ({
       padding: 15
     }}
   >
-    <View style={{ flexDirection: "column" }}>
+    <View style={{ flexDirection: "column", alignItems: "center" }}>
       <Text>photos</Text>
-      <Text style={{ marginLeft: 6 }}>{photos}</Text>
+      <Text style={{ fontSize: 14, fontWeight: "600" }}>{photos}</Text>
     </View>
 
-    <View style={{ flexDirection: "column" }}>
+    <View style={{ flexDirection: "column", alignItems: "center" }}>
       <Text>following</Text>
-      <Text style={{ marginLeft: 6 }}>{followers}</Text>
+      <Text style={{ fontSize: 14, fontWeight: "600" }}>{followers}</Text>
     </View>
 
-    <View style={{ flexDirection: "column" }}>
+    <View style={{ flexDirection: "column", alignItems: "center" }}>
       <Text>followers</Text>
-      <Text style={{ marginLeft: 6 }}>{following}</Text>
+      <Text style={{ fontSize: 14, fontWeight: "600" }}>{following}</Text>
     </View>
   </View>
 );

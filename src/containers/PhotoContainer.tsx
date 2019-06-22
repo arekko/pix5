@@ -38,7 +38,6 @@ export const P: React.FC<Props> = ({
       photoId: photoId
     });
   };
-  console.log(photos);
 
   return loading ? (
     <Spinner color="#ddd" type="9CubeGrid" />

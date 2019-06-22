@@ -212,6 +212,11 @@ export type TabsActionTypes = setTabIndex;
 export const FETCH_USER_REQUEST = "FETCH_USER_REQUEST";
 export const FETCH_USER_SUCCESS = "FETCH_USER_SUCCESS";
 export const FETCH_USER_FAILURE = "FETCH_USER_FAILURE";
+
+export const FETCH_USER_PHOTOS_REQUEST = "FETCH_USER_PHOTOS_REQUEST";
+export const FETCH_USER_PHOTOS_SUCCESS = "FETCH_USER_PHOTOS_SUCCESS";
+export const FETCH_USER_PHOTOS_FAILURE = "FETCH_USER_PHOTOS_FAILURE";
+
 export const CLEAR_USER = "CLEAR_USER";
 
 export interface UserState {
@@ -219,6 +224,14 @@ export interface UserState {
   currentUser: User | undefined;
   loading: boolean;
   error: any | undefined;
+  userPhotos: {
+    userPhotos: Image[];
+    userPhotosLoading: boolean;
+    userPhotoErrors: any | undefined;
+    page: number,
+    order: Order,
+    perPage: number
+  };
 }
 
 interface UserRequest {
@@ -235,9 +248,28 @@ interface UserFailure {
   payload: any;
 }
 
+interface UserPhotosRequest {
+  type: typeof FETCH_USER_PHOTOS_REQUEST;
+}
+
+interface UserPhotosSuccess {
+  type: typeof FETCH_USER_PHOTOS_SUCCESS;
+  payload: Image[];
+}
+
+interface UserPhotosFailure {
+  type: typeof FETCH_USER_PHOTOS_FAILURE;
+  payload: any;
+}
 interface ClearUser {
   type: typeof CLEAR_USER;
 }
-// TODO: clear user
 
-export type UserActions = UserRequest | UserSuccess | UserFailure | ClearUser;
+export type UserActions =
+  | UserRequest
+  | UserSuccess
+  | UserFailure
+  | ClearUser
+  | UserPhotosFailure
+  | UserPhotosRequest
+  | UserPhotosSuccess;

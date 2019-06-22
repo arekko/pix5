@@ -9,7 +9,7 @@ export const PhotoList: React.FC<PhotoListProps> = ({
   onPress,
   headerComponent,
   loadingMore = false,
-  loadMore
+  loadMore = () => []
 }) => {
   return (
     <View style={{ flex: 1, width: "100%", alignItems: "center" }}>

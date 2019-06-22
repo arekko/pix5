@@ -3,6 +3,7 @@ import { useReducer } from "react";
 import {
   Alert,
   Dimensions,
+  Image as RNImage,
   Linking,
   PermissionsAndroid,
   ScrollView,
@@ -13,6 +14,7 @@ import {
 } from "react-native";
 import RNFetchBlob from "react-native-fetch-blob";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import * as Progress from "react-native-progress";
 import Image from "react-native-scalable-image";
 import WallPaperManager from "react-native-wallpaper-manager";
 import { useNavigation, useNavigationParam } from "react-navigation-hooks";
@@ -98,8 +100,6 @@ export const D: React.FC<IDetailImageProps> = ({
   const downloadImage = (source: string) => Linking.openURL(source);
 
   const actualDownload = () => {
-    const android = RNFetchBlob.android;
-
     let ext: any = extention(photo.links.download);
     ext = "." + ext[0];
 
@@ -107,9 +107,7 @@ export const D: React.FC<IDetailImageProps> = ({
       progress: 0,
       loading: true
     });
-    let dirs = RNFetchBlob.fs.dirs;
     let PictureDir = RNFetchBlob.fs.dirs.PictureDir;
-    var date = new Date();
 
     RNFetchBlob.config({
       addAndroidDownloads: {
@@ -117,26 +115,16 @@ export const D: React.FC<IDetailImageProps> = ({
         useDownloadManager: true,
         notification: true,
         mediaScannable: true,
-        mime: "application/vnd.android.package-archive"
+        title: " Download Success!",
+        mime: "image/png"
       },
       fileCache: true
     })
       .fetch("GET", photo.links.download)
-      // .progress((received: any, total: any) => {
-      //   console.log("i am here");
-
-      //   console.log("progress", received / total);
-      //   setState({ progress: received / total });
-      // })
-      .then((res: any) => {
-        android.actionViewIntent(
-          res.path(),
-          "application/vnd.android.package-archive"
-        );
-        console.log(res.path());
+      .then(() => {
+        console.log("i am here");
 
         setState({
-          progress: 100,
           loading: false
         });
         ToastAndroid.showWithGravity(
@@ -180,23 +168,42 @@ export const D: React.FC<IDetailImageProps> = ({
   ) : (
     <View style={{ flex: 1, backgroundColor: "#fafafa" }}>
       <ScrollView>
-        <Image
+        {/* <Image
           source={{ uri: photo.urls.regular }}
           width={screenWidth}
           style={{
             maxHeight: "100%",
             backgroundColor: photo.color
           }}
+        /> */}
+
+        <RNImage
+          source={{ uri: photo.urls.regular }}
+          style={{
+            width: screenWidth,
+            height: screenWidth,
+            backgroundColor: photo.color
+          }}
         />
 
         <View>
+          {state.loading ? (
+            <Progress.Bar
+              indeterminate={true}
+              borderColor="#fafafa"
+              color="#ddd"
+              width={screenWidth}
+            />
+          ) : null}
           <View
             style={{
-              padding: 10,
+              padding: 15,
               flex: 1,
               flexDirection: "row",
               backgroundColor: "#fff",
-              justifyContent: "space-around"
+              justifyContent: "space-around",
+              borderBottomColor: "#ddd",
+              borderBottomWidth: 1
             }}
           >
             <TouchableIcon
@@ -215,8 +222,6 @@ export const D: React.FC<IDetailImageProps> = ({
             />
             <TouchableIcon name="share-variant" size={25} onPress={onShare} />
           </View>
-
-          {state.loading ? <Text>{state.progress}</Text> : null}
 
           <TouchableOpacity
             style={{
