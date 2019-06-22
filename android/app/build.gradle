@@ -138,6 +138,7 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-fetch-blob')
     implementation project(':react-native-wallpaper-manager')
     implementation project(':react-native-reanimated')
     implementation project(':react-native-vector-icons')

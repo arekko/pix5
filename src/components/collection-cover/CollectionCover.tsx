@@ -13,8 +13,6 @@ export const CollectionCover = ({
   collection: Collection;
   onPressCollection: any;
 }) => {
-  console.log(collection.id);
-
   return (
     <TouchableOpacity
       style={{

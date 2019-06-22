@@ -1,13 +1,17 @@
 import * as React from "react";
+import { useReducer } from "react";
 import {
   Alert,
   Dimensions,
   Linking,
+  PermissionsAndroid,
   ScrollView,
   Share,
   Text,
+  ToastAndroid,
   View
 } from "react-native";
+import RNFetchBlob from "react-native-fetch-blob";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Image from "react-native-scalable-image";
 import WallPaperManager from "react-native-wallpaper-manager";
@@ -23,7 +27,6 @@ import TouchableIcon from "../components/touchable-icon";
 import withUnsplashService from "../hocs";
 import { clearPhoto, fetchPhoto } from "../redux-store/actions/photoActions";
 import { Image as Photo } from "../types";
-
 const screenWidth = Dimensions.get("screen").width;
 
 // Image Info
@@ -41,6 +44,11 @@ export const D: React.FC<IDetailImageProps> = ({
   loading,
   clearPhoto
 }) => {
+  const [state, setState] = useReducer(
+    (state, newState) => ({ ...state, ...newState }),
+    { loading: false, prgress: 0 }
+  );
+
   const photoId = useNavigationParam("photoId");
   const { navigate } = useNavigation();
 
@@ -79,8 +87,7 @@ export const D: React.FC<IDetailImageProps> = ({
 
   const onShare = () => {
     Share.share({
-      message: photo.links.html,
-      title: "Check this photo"
+      message: photo.links.html
     });
   };
 
@@ -89,6 +96,84 @@ export const D: React.FC<IDetailImageProps> = ({
   };
 
   const downloadImage = (source: string) => Linking.openURL(source);
+
+  const actualDownload = () => {
+    const android = RNFetchBlob.android;
+
+    let ext: any = extention(photo.links.download);
+    ext = "." + ext[0];
+
+    setState({
+      progress: 0,
+      loading: true
+    });
+    let dirs = RNFetchBlob.fs.dirs;
+    let PictureDir = RNFetchBlob.fs.dirs.PictureDir;
+    var date = new Date();
+
+    RNFetchBlob.config({
+      addAndroidDownloads: {
+        path: PictureDir + `/PIX/image_${photo.id}.png`,
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        mime: "application/vnd.android.package-archive"
+      },
+      fileCache: true
+    })
+      .fetch("GET", photo.links.download)
+      // .progress((received: any, total: any) => {
+      //   console.log("i am here");
+
+      //   console.log("progress", received / total);
+      //   setState({ progress: received / total });
+      // })
+      .then((res: any) => {
+        android.actionViewIntent(
+          res.path(),
+          "application/vnd.android.package-archive"
+        );
+        console.log(res.path());
+
+        setState({
+          progress: 100,
+          loading: false
+        });
+        ToastAndroid.showWithGravity(
+          "Your file has been downloaded to downloads folder!",
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM
+        );
+      });
+  };
+
+  const downloadFile = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: "Storage Permission",
+          message: "App needs access to memory to download the file ",
+          buttonNegative: "Cancel",
+          buttonPositive: "OK"
+        }
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        actualDownload();
+      } else {
+        Alert.alert(
+          "Permission Denied!",
+          "You need to give storage permission to download the file"
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  const extention = (filename: string) => {
+    return /[.]/.exec(filename) ? /[^.]+$/.exec(filename) : undefined;
+  };
 
   return loading || !photo ? (
     <Spinner color="#ddd" type="9CubeGrid" />
@@ -117,7 +202,7 @@ export const D: React.FC<IDetailImageProps> = ({
             <TouchableIcon
               name="cloud-download-outline"
               size={25}
-              onPress={() => downloadImage(photo.links.download)}
+              onPress={() => downloadFile()}
             />
             <TouchableIcon
               name="wallpaper"
@@ -130,6 +215,8 @@ export const D: React.FC<IDetailImageProps> = ({
             />
             <TouchableIcon name="share-variant" size={25} onPress={onShare} />
           </View>
+
+          {state.loading ? <Text>{state.progress}</Text> : null}
 
           <TouchableOpacity
             style={{
